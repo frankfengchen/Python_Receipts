@@ -1,3 +1,23 @@
+# This python program is used to sum the $ amount of all the receipts in a directory (for accounting purposes).
+# All the files/directories should put the $ amount at the end of the file name starting with a "$" symbol (of course
+# the file extension is after everything else). 
+# Some examples for valid names:
+#	- "20220101_Rudys_$101.22.pdf" (this if a PDF file)
+#	- "20220101_Remodel_$3679.82" (this is a directory)
+#
+# This program will:
+#	- Read all file names for the files and directories under the current directory
+#	- Parse the names and find the $ amount
+#	- Add up all amount and create a text report file in the same directory
+#	- Report below errors:
+#		- File names that don't contain a "$" symbol
+#
+# [Command line usage]
+# 	- In Windows, add the program location to PATH, open Cmd Prompt, type: 
+# 		- "sum_i_dir.py" (this is for normal mode)
+# 		- "sum_i_dir.py debug" (this is for debug mode)
+
+
 import os
 import sys
 from datetime import datetime
@@ -16,15 +36,26 @@ for fname in os.listdir('.'):
 
 	# If we cannot find '$', this is not a valid receipt, continue to next file
 	if start == 0:
-		print("*** File \"", fname ,"\" doesn't have \'$\' !!!")
+		print("\n   *****WARNING***** File \"", fname ,"\" doesn't have \'$\' !!!  *****WARNING*****\n")
 		continue
 
-	end = fname.rfind('.')
+	# We find a valid receipt file
 	fvalidcount += 1
-	sum += float(fname[start:end])
+
+	# 1. Check to see if the last character of the file name is a number (in the case of a directory, 
+	# or a file without an extension). 
+	#    - If it's a number, then no need to find the last dot (which is used to exclude the file extension)
+	# 2. Remove comma from the numbers (comma may be used as thousands-separator in the file name)
+	if fname[-1].isdigit(): # $ amount is already at the end of the file name
+		noComma = fname[start:].replace(',','')
+	else:                   # Need to strip out the file extension
+		end = fname.rfind('.')
+		noComma = fname[start:end].replace(',','')
+
+	sum += float(noComma)
 	sum = round(sum, 2)
 	if (len(sys.argv) > 1 and sys.argv[1] == "debug"):
-		print(fname, ":", fname[start:end], ";", float(fname[start:end]), ";", sum)
+		print(fname, ":", fname[start:end], ";", float(noComma), ";", sum)
 
 print(datetime.now())
 print("Total number of files", fcount, "; total valid", fvalidcount)
