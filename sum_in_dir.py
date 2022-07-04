@@ -1,6 +1,7 @@
 # This python program is used to sum the $ amount of all the receipts in a directory (for accounting purposes).
 # All the files/directories should put the $ amount at the end of the file name starting with a "$" symbol (of course
-# the file extension is at the real end, if there is one). Some examples for valid names:
+# the file extension is after everything else). 
+# Some examples for valid names:
 #	- "20220101_Rudys_$101.22.pdf" (this if a PDF file)
 #	- "20220101_Remodel_$3679.82" (this is a directory)
 #
@@ -11,7 +12,7 @@
 #	- Report below errors:
 #		- File names that don't contain a "$" symbol
 #
-# [Commandline usage]
+# [Command line usage]
 # 	- In Windows, add the program location to PATH, open Cmd Prompt, type: 
 # 		- "sum_i_dir.py" (this is for normal mode)
 # 		- "sum_i_dir.py debug" (this is for debug mode)
